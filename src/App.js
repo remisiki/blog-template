@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { languages } from './components/translation/i18n';
+import { NavigationBlock } from './components/widgets/NavigationBlock';
+import { ScrollHandler } from './components/control/scroll';
+import { Title } from './components/control/Title';
+import { checkThemeMode, getTheme } from './components/control/dark';
+import { BlogScreen } from './components/Blog';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [theme, setTheme] = useState(getTheme());
+	useEffect(() => {
+		checkThemeMode();
+	}, [theme]);
+	return (
+		<>
+			<Title />
+			<header>
+				<NavigationBlock setTheme={setTheme} languages={languages}/>
+			</header>
+			<BlogScreen />
+			<img id="totop" alt="go to page top" onClick={() => {window.scrollTo(0, 0);}} />{/**/}
+		</>
+	);
 }
 
 export default App;
