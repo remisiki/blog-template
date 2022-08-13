@@ -109,7 +109,7 @@ function createLanguageSetting(t, i18n, languages = ['en', 'ja', 'zh'], defaultL
 			hideSideBar();
 		});
 		const current_lang = i18n.language.split("-")[0];
-		if ((language === current_lang) || (lang_map[current_lang] === undefined && language === defaultLang)) {
+		if ((language === current_lang) || (languages.indexOf(current_lang) === -1 && language === defaultLang)) {
 			lang_option.classList.add("option-selected");
 		}
 		return lang_option;
