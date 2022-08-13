@@ -22,7 +22,7 @@ function createSideOption(content, name, onClick, icon = true) {
 	return option_container;
 }
 
-export function createSettingBar(setTheme, t, i18n, languages) {
+export function createSettingBar(setTheme, t, i18n, languages, defaultLang) {
 	const sidebar_exist = document.getElementById('setting-bar');
 	if (sidebar_exist) {
 		sidebar_exist.classList.remove('slide-in');
@@ -43,7 +43,7 @@ export function createSettingBar(setTheme, t, i18n, languages) {
 	sidebar.id = 'setting-bar';
 
 	sidebar.appendChild(close_btn);
-	sidebar.appendChild(createLanguageSetting(t, i18n, languages));
+	sidebar.appendChild(createLanguageSetting(t, i18n, languages, defaultLang));
 	sidebar.appendChild(createDarkSetting(t, setTheme));
 	sidebar.appendChild(createSettingInfo());
 	document.body.appendChild(sidebar);
@@ -90,42 +90,30 @@ function createDarkSetting(t, setTheme) {
 	return wrapper;
 }
 
-function createLanguageSetting(t, i18n, languages = ['en', 'ja', 'zh']) {
+function createLanguageSetting(t, i18n, languages = ['en', 'ja', 'zh'], defaultLang = 'en') {
+	console.log(i18n.language)
 	const lang_map = {
-		'en': 0,
-		'zh': 1,
-		'ja': 2
+		'en': 'English',
+		'zh': '中文',
+		'ja': '日本語'
 	};
-	const lang_mode = lang_map[i18n.language];
 	const wrapper = document.createElement('div');
 	const caption = document.createElement('h1');
 	caption.innerText = t('language');
 	wrapper.appendChild(caption);
 
-	let options = [];
-	if (languages.includes('en')) {
-		options.push(createSideOption('English', 'en', (e) => {
+	const options = languages.map(language => {
+		const lang_option = createSideOption(lang_map[language], language, (e) => {
 			selectOption(e);
-			i18n.changeLanguage('en');
+			i18n.changeLanguage(language);
 			hideSideBar();
-		}));
-	}
-	if (languages.includes('zh')) {
-		options.push(createSideOption('中文', 'zh', (e) => {
-			selectOption(e);
-			i18n.changeLanguage('zh');
-			hideSideBar();
-		}));
-	}
-	if (languages.includes('ja')) {
-		options.push(createSideOption('日本語', 'ja', (e) => {
-			selectOption(e);
-			i18n.changeLanguage('ja');
-			hideSideBar();
-		}));
-	}
-
-	options[lang_mode].classList.add('option-selected');
+		});
+		const current_lang = i18n.language.split("-")[0];
+		if ((language === current_lang) || (lang_map[current_lang] === undefined && language === defaultLang)) {
+			lang_option.classList.add("option-selected");
+		}
+		return lang_option;
+	});
 	for (const option of options) {
 		wrapper.appendChild(option);
 	}

@@ -4,12 +4,14 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
 
 export const languages = ['ja', 'en', 'zh'];
+export const defaultLang = 'en';
 
 i18n
 	.use(LanguageDetector)
 	.use(resourcesToBackend((language, namespace, callback) => {
-		if (languages.includes(language)) {
-			import(`./${language}.json`)
+		const trueLanguage = language.split("-")[0];
+		if (languages.includes(trueLanguage)) {
+			import(`./${trueLanguage}.json`)
 				.then((resources) => {
 					callback(null, resources);
 				})
@@ -17,12 +19,12 @@ i18n
 					callback(error, null);
 				})
 		}
-		else if (language === "dev") {
+		else if (trueLanguage === "dev") {
 			callback(null, null);
 		}
 		else {
-			console.log(`${language} not supported, use en instead.`);
-			import(`./en.json`)
+			console.log(`${trueLanguage} not supported, use ${defaultLang} instead.`);
+			import(`./${defaultLang}.json`)
 				.then((resources) => {
 					callback(null, resources);
 				})
@@ -34,10 +36,6 @@ i18n
 	}))
 	.use(initReactI18next)
 	.init({
-		// resources,　// ../constants/translationsを設定する
-
-		// lng: 'ja',
-		// fallbackLng: 'en',
 		debug: false,
 
 		keySeparator: false,

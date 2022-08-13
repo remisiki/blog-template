@@ -5,16 +5,13 @@ import {
 	Footer
 } from './widgets';
 import { getTheme } from './control/dark';
-// import { selectNavi } from './widgets/NavigationBlock';
 import { MathJaxContext, MathJax } from 'better-react-mathjax';
 import { CopyBlock, dracula } from 'react-code-blocks';
 
 export function BlogScreen() {
-	// const avatar = require("../assets/avatar.jpg");
 	const sections = Array.from({length: 4}, (v, k) => `s${k}`);
 	const { t, i18n } = useTranslation();
 	useEffect(() => {
-		// selectNavi('home');
 		const external_links = document.querySelectorAll('a[href^=http]');
 		for (const link of external_links) {
 			link.setAttribute('target', '_blank');
